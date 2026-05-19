@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Connaissance de la Vie — Canguilhem</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --noir: #0a0a0a;
+    --creme: #f5f0e8;
+    --rouge: #c0392b;
+    --or: #c9a84c;
+    --gris: #2a2a2a;
+    --gris-clair: #444;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--noir);
+    color: var(--creme);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ÉCRAN D'ACCUEIL */
+  #accueil {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    position: relative;
+    background: radial-gradient(ellipse at 30% 20%, #1a0a00 0%, var(--noir) 60%);
+  }
+
+  #accueil::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(201,168,76,0.03) 60px, rgba(201,168,76,0.03) 61px),
+      repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(201,168,76,0.03) 60px, rgba(201,168,76,0.03) 61px);
+  }
+
+  .eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--or);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.2s;
+  }
+
+  h1.grand-titre {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    font-weight: 900;
+    line-height: 1.05;
+    color: var(--creme);
+    margin-bottom: 0.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.4s;
+  }
+
+  h1.grand-titre em {
+    color: var(--or);
+    font-style: italic;
+  }
+
+  .auteur {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--gris-clair);
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.6s;
+  }
+
+  .ligne-or {
+    width: 80px;
+    height: 2px;
+    background: var(--or);
+    margin: 0 auto 3rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.7s;
+  }
+
+  .boutons-accueil {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    max-width: 340px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.9s;
+  }
+
+  .btn-principal {
+    padding: 1rem 2rem;
+    border: none;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    transition: all 0.3s ease;
+    border-radius: 2px;
+  }
+
+  .btn-rouge {
+    background: var(--rouge);
+    color: white;
+  }
+  .btn-rouge:hover { background: #a93226; transform: translateY(-2px); }
+
+  .btn-or {
+    background: transparent;
+    color: var(--or);
+    border: 1px solid var(--or);
+  }
+  .btn-or:hover { background: var(--or); color: var(--noir); transform: translateY(-2px); }
+
+  /* ÉCRANS GÉNÉRAUX */
+  .ecran {
+    display: none;
+    min-height: 100vh;
+    padding: 2rem 1.5rem;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+  .ecran.actif { display: block; }
+
+  .nav-retour {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--or);
+    cursor: pointer;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 3rem;
+    transition: opacity 0.2s;
+    background: none;
+    border: none;
+  }
+  .nav-retour:hover { opacity: 0.7; }
+
+  .titre-section {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    line-height: 1.1;
+  }
+
+  .sous-titre-section {
+    color: var(--gris-clair);
+    font-size: 0.9rem;
+    margin-bottom: 2.5rem;
+    line-height: 1.5;
+  }
+
+  /* VRAI/FAUX */
+  .question-card {
+    background: var(--gris);
+    border-left: 3px solid var(--or);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    border-radius: 2px;
+    animation: fadeUp 0.5s ease forwards;
+  }
+
+  .question-numero {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--or);
+    margin-bottom: 0.5rem;
+  }
+
+  .question-texte {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    line-height: 1.5;
+    margin-bottom: 1.2rem;
+    color: var(--creme);
+  }
+
+  .vf-boutons {
+    display: flex;
+    gap: 0.8rem;
+  }
+
+  .btn-vf {
+    flex: 1;
+    padding: 0.7rem;
+    border: 1px solid var(--gris-clair);
+    background: transparent;
+    color: var(--creme);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    border-radius: 2px;
+  }
+
+  .btn-vf:hover:not(:disabled) { border-color: var(--or); color: var(--or); }
+  .btn-vf.correct { background: #1a4a2e; border-color: #2ecc71; color: #2ecc71; }
+  .btn-vf.incorrect { background: #4a1a1a; border-color: var(--rouge); color: var(--rouge); }
+  .btn-vf:disabled { cursor: default; }
+
+  .explication {
+    margin-top: 1rem;
+    padding: 0.8rem;
+    background: rgba(201,168,76,0.08);
+    border-radius: 2px;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: #ccc;
+    display: none;
+  }
+  .explication.visible { display: block; }
+
+  /* SCORE */
+  .score-bar-container {
+    position: sticky;
+    top: 0;
+    background: var(--noir);
+    padding: 1rem 0;
+    margin-bottom: 1.5rem;
+    z-index: 10;
+    border-bottom: 1px solid #222;
+  }
+
+  .score-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--gris-clair);
+    margin-bottom: 0.4rem;
+  }
+
+  .score-bar {
+    height: 3px;
+    background: #222;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .score-fill {
+    height: 100%;
+    background: var(--or);
+    transition: width 0.5s ease;
+    border-radius: 2px;
+  }
+
+  /* NORMAL-O-METRE */
+  .normalo-card {
+    background: var(--gris);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border-radius: 2px;
+    border-top: 2px solid var(--rouge);
+  }
+
+  .situation-texte {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+    color: var(--creme);
+  }
+
+  .normalo-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gris-clair);
+    margin-bottom: 0.5rem;
+  }
+
+  .normalo-slider {
+    width: 100%;
+    -webkit-appearance: none;
+    height: 4px;
+    border-radius: 2px;
+    background: linear-gradient(to right, #2ecc71, var(--or), var(--rouge));
+    outline: none;
+    cursor: pointer;
+    margin-bottom: 1rem;
+  }
+
+  .normalo-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--creme);
+    border: 3px solid var(--or);
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+
+  .normalo-valeur {
+    text-align: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--or);
+    min-height: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .btn-valider-normalo {
+    width: 100%;
+    padding: 0.8rem;
+    background: var(--rouge);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 2px;
+    transition: all 0.2s;
+  }
+  .btn-valider-normalo:hover { background: #a93226; }
+  .btn-valider-normalo:disabled { background: #444; cursor: default; }
+
+  .normalo-revelation {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: rgba(201,168,76,0.08);
+    border-radius: 2px;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: #ccc;
+    display: none;
+    border-left: 2px solid var(--or);
+  }
+  .normalo-revelation.visible { display: block; }
+
+  /* RÉSULTAT FINAL */
+  .resultat-final {
+    text-align: center;
+    padding: 3rem 1rem;
+  }
+
+  .grand-score {
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem;
+    font-weight: 900;
+    color: var(--or);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .score-label {
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gris-clair);
+    margin-bottom: 2rem;
+  }
+
+  .message-final {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: var(--creme);
+    max-width: 400px;
+    margin: 0 auto 2rem;
+  }
+
+  .citation-canguilhem {
+    padding: 1.5rem;
+    border: 1px solid #333;
+    border-left: 3px solid var(--or);
+    font-style: italic;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #aaa;
+    margin-bottom: 2rem;
+    text-align: left;
+  }
+
+  .btn-recommencer {
+    padding: 0.8rem 2rem;
+    background: transparent;
+    border: 1px solid var(--or);
+    color: var(--or);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    border-radius: 2px;
+    transition: all 0.2s;
+  }
+  .btn-recommencer:hover { background: var(--or); color: var(--noir); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .progress-dots {
+    display: flex;
+    gap: 0.4rem;
+    margin-bottom: 2rem;
+  }
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #333;
+    transition: background 0.3s;
+  }
+  .dot.fait { background: var(--or); }
+</style>
+</head>
+<body>
+
+<!-- ACCUEIL -->
+<div id="accueil" class="actif" style="display:flex;">
+  <div class="eyebrow">Présentation interactive</div>
+  <h1 class="grand-titre">La Connaissance<br>de <em>la Vie</em></h1>
+  <p class="auteur">Georges Canguilhem — 1952</p>
+  <div class="ligne-or"></div>
+  <div class="boutons-accueil">
+    <button class="btn-principal btn-rouge" onclick="allerVers('vrai-faux')">
+      🎯 Vrai ou Faux ?
+    </button>
+    <button class="btn-principal btn-or" onclick="allerVers('normalo')">
+      📊 Normal-o-mètre
+    </button>
+  </div>
+</div>
+
+<!-- VRAI / FAUX -->
+<div id="vrai-faux" class="ecran">
+  <button class="nav-retour" onclick="allerVers('accueil')">← Retour</button>
+  <h2 class="titre-section">Vrai <em style="color:var(--or);font-family:'Playfair Display',serif;">ou</em> Faux ?</h2>
+  <p class="sous-titre-section">Testez vos connaissances sur <em>La Connaissance de la vie</em>. Cliquez sur votre réponse.</p>
+  
+  <div class="score-bar-container">
+    <div class="score-info">
+      <span id="score-texte">Score : 0 / 0</span>
+      <span id="questions-restantes">7 questions</span>
+    </div>
+    <div class="score-bar">
+      <div class="score-fill" id="score-fill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <div class="progress-dots" id="progress-dots"></div>
+  <div id="questions-container"></div>
+</div>
+
+<!-- NORMAL-O-METRE -->
+<div id="normalo" class="ecran">
+  <button class="nav-retour" onclick="allerVers('accueil')">← Retour</button>
+  <h2 class="titre-section">Normal-o-<em style="color:var(--rouge);font-family:'Playfair Display',serif;">mètre</em></h2>
+  <p class="sous-titre-section">Pour chaque situation, déplacez le curseur selon vous. Normal ou monstrueux ? Puis découvrez ce que dit Canguilhem.</p>
+  <div id="normalo-container"></div>
+</div>
+
+<!-- RÉSULTAT VRAI/FAUX -->
+<div id="resultat" class="ecran">
+  <div class="resultat-final">
+    <div class="grand-score" id="grand-score-texte">0/7</div>
+    <div class="score-label">Votre score final</div>
+    <p class="message-final" id="message-final"></p>
+    <div class="citation-canguilhem">
+      « La vie est polarité et position inconsciente de valeur ; en un mot, la vie est en fait une activité normative. »
+      <br><br>— Georges Canguilhem
+    </div>
+    <button class="btn-recommencer" onclick="allerVers('accueil')">← Retour à l'accueil</button>
+  </div>
+</div>
+
+<script>
+const questions = [
+  {
+    q: "La biologie peut utiliser exactement les mêmes méthodes que la physique ou la chimie.",
+    reponse: false,
+    explication: "Faux. Selon Canguilhem, le vivant résiste à toute réduction mécanique. Il réagit, s'adapte et résiste — ce qui impose à la biologie ses propres méthodes spécifiques."
+  },
+  {
+    q: "Pour Canguilhem, un être malade est un être qui vit sans aucune norme.",
+    reponse: false,
+    explication: "Faux. La maladie n'est pas l'absence de norme mais une autre norme. Le malade développe ses propres règles de fonctionnement, adaptées à sa situation."
+  },
+  {
+    q: "La machine a été inventée par l'homme en s'inspirant de son propre corps.",
+    reponse: true,
+    explication: "Vrai ! Canguilhem renverse la logique habituelle : c'est la vie qui est première. La machine n'est qu'une imitation partielle et appauvrie de l'organisme vivant."
+  },
+  {
+    q: "Le milieu naturel est une réalité objective et universelle, identique pour tous les êtres vivants.",
+    reponse: false,
+    explication: "Faux. Chaque être vivant construit son propre milieu selon ses besoins et capacités. Deux animaux dans le même espace géographique habitent des milieux radicalement différents."
+  },
+  {
+    q: "Pour Canguilhem, le monstre est une expression de la puissance créatrice de la vie.",
+    reponse: true,
+    explication: "Vrai ! Le monstre n'est pas un échec — c'est la vie qui expérimente de nouvelles formes. Ce qui est considéré comme monstrueux aujourd'hui pourrait être la norme de demain."
+  },
+  {
+    q: "La notion de 'normal' est une donnée purement scientifique et objective.",
+    reponse: false,
+    explication: "Faux. La norme est une construction philosophique, sociale et culturelle. Elle peut désigner une moyenne statistique ou un idéal normatif — deux choses très différentes."
+  },
+  {
+    q: "Canguilhem soutient que connaître la vie, c'est déjà être vivant.",
+    reponse: true,
+    explication: "Vrai ! C'est le paradoxe central de l'œuvre : le biologiste fait lui-même partie de ce qu'il étudie. La connaissance du vivant est toujours une connaissance depuis l'intérieur."
+  }
+];
+
+const situations = [
+  {
+    s: "Un enfant né sans bras qui a appris à écrire avec les pieds et mène une vie épanouie.",
+    revelation: "Pour Canguilhem, cet enfant n'est pas 'anormal' — il a simplement développé ses propres normes adaptées à son corps. La différence n'est pas un échec, c'est une autre façon d'être vivant."
+  },
+  {
+    s: "Un homme qui dort seulement 4 heures par nuit, se sent en parfaite santé et est très productif.",
+    revelation: "Canguilhem dirait que si cet homme fonctionne bien selon ses propres normes, il n'est pas malade. La 'norme' des 8 heures de sommeil est une moyenne statistique, pas une vérité universelle."
+  },
+  {
+    s: "Une plante qui a développé une forme radicalement différente de toutes les plantes de son espèce.",
+    revelation: "Selon Canguilhem, cette plante expérimente une nouvelle forme de vie. Ce qu'on appelle 'anomalie' botanique est peut-être le début d'une nouvelle normalité pour l'espèce."
+  },
+  {
+    s: "Un poisson des abysses avec une lanterne lumineuse sur la tête, vivant dans l'obscurité totale.",
+    revelation: "Ce poisson a construit son propre milieu vital dans les profondeurs. Sa forme 'monstrueuse' est en réalité une adaptation parfaite à son environnement — un exemple parfait de normativité du vivant."
+  },
+  {
+    s: "Une personne atteinte de synesthésie qui 'voit' les sons et 'entend' les couleurs.",
+    revelation: "Pour Canguilhem, cette personne vit selon d'autres normes sensorielles — pas des normes inférieures, juste différentes. Son rapport au milieu est unique et tout aussi valide."
+  }
+];
+
+let scoreVF = 0;
+let reponsesVF = 0;
+
+function allerVers(id) {
+  document.querySelectorAll('.ecran, #accueil').forEach(e => {
+    e.style.display = 'none';
+    e.classList.remove('actif');
+  });
+  const cible = document.getElementById(id);
+  cible.style.display = id === 'accueil' ? 'flex' : 'block';
+  cible.classList.add('actif');
+  window.scrollTo(0, 0);
+
+  if (id === 'vrai-faux') initialiserVF();
+  if (id === 'normalo') initialiserNormalo();
+}
+
+function initialiserVF() {
+  scoreVF = 0;
+  reponsesVF = 0;
+  const container = document.getElementById('questions-container');
+  const dots = document.getElementById('progress-dots');
+  container.innerHTML = '';
+  dots.innerHTML = '';
+
+  questions.forEach((q, i) => {
+    dots.innerHTML += `<div class="dot" id="dot-${i}"></div>`;
+    const card = document.createElement('div');
+    card.className = 'question-card';
+    card.id = `card-${i}`;
+    card.innerHTML = `
+      <div class="question-numero">Question ${i+1} / ${questions.length}</div>
+      <div class="question-texte">${q.q}</div>
+      <div class="vf-boutons">
+        <button class="btn-vf" onclick="repondreVF(${i}, true, this)">✓ Vrai</button>
+        <button class="btn-vf" onclick="repondreVF(${i}, false, this)">✗ Faux</button>
+      </div>
+      <div class="explication" id="expl-${i}">${q.explication}</div>
+    `;
+    container.appendChild(card);
+  });
+  majScore();
+}
+
+function repondreVF(index, reponse, btn) {
+  const card = document.getElementById(`card-${index}`);
+  const btns = card.querySelectorAll('.btn-vf');
+  const expl = document.getElementById(`expl-${index}`);
+  const dot = document.getElementById(`dot-${index}`);
+
+  btns.forEach(b => b.disabled = true);
+  expl.classList.add('visible');
+
+  const correct = reponse === questions[index].reponse;
+  btn.classList.add(correct ? 'correct' : 'incorrect');
+
+  const autreBtnIndex = reponse ? 1 : 0;
+  if (!correct) btns[autreBtnIndex].classList.add('correct');
+
+  if (correct) scoreVF++;
+  reponsesVF++;
+  dot.classList.add('fait');
+  majScore();
+
+  if (reponsesVF === questions.length) {
+    setTimeout(() => afficherResultat(), 1500);
+  }
+}
+
+function majScore() {
+  document.getElementById('score-texte').textContent = `Score : ${scoreVF} / ${reponsesVF}`;
+  document.getElementById('questions-restantes').textContent = `${questions.length - reponsesVF} restantes`;
+  const pct = reponsesVF > 0 ? (scoreVF / questions.length) * 100 : 0;
+  document.getElementById('score-fill').style.width = pct + '%';
+}
+
+function afficherResultat() {
+  allerVers('resultat');
+  document.getElementById('grand-score-texte').textContent = `${scoreVF}/${questions.length}`;
+  let msg = '';
+  if (scoreVF >= 6) msg = "Excellent ! Vous avez saisi l'essentiel de la pensée de Canguilhem. La vie n'a plus de secrets pour vous.";
+  else if (scoreVF >= 4) msg = "Bien joué ! Vous commencez à comprendre que la vie résiste toujours à nos catégories.";
+  else msg = "La philosophie du vivant est complexe — mais c'est précisément ce que nous dit Canguilhem. Recommencez !";
+  document.getElementById('message-final').textContent = msg;
+}
+
+function initialiserNormalo() {
+  const container = document.getElementById('normalo-container');
+  container.innerHTML = '';
+
+  situations.forEach((sit, i) => {
+    const card = document.createElement('div');
+    card.className = 'normalo-card';
+    card.innerHTML = `
+      <div class="question-numero">Situation ${i+1} / ${situations.length}</div>
+      <div class="situation-texte">${sit.s}</div>
+      <div class="normalo-labels">
+        <span>✓ Totalement normal</span>
+        <span>⚠ Monstrueux</span>
+      </div>
+      <input type="range" class="normalo-slider" min="0" max="100" value="50" 
+        oninput="majValeur(this, 'val-${i}')" id="slider-${i}">
+      <div class="normalo-valeur" id="val-${i}">Déplacez le curseur...</div>
+      <button class="btn-valider-normalo" onclick="validerNormalo(${i}, this)">
+        Voir ce que dit Canguilhem →
+      </button>
+      <div class="normalo-revelation" id="rev-${i}">${sit.revelation}</div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function majValeur(slider, valId) {
+  const val = parseInt(slider.value);
+  const el = document.getElementById(valId);
+  if (val < 20) el.textContent = "✓ Tout à fait normal";
+  else if (val < 40) el.textContent = "Plutôt normal";
+  else if (val < 60) el.textContent = "Entre les deux...";
+  else if (val < 80) el.textContent = "Plutôt anormal";
+  else el.textContent = "⚠ Monstrueux !";
+  el.style.color = `hsl(${120 - val * 1.2}, 70%, 60%)`;
+}
+
+function validerNormalo(index, btn) {
+  document.getElementById(`rev-${index}`).classList.add('visible');
+  btn.disabled = true;
+  btn.textContent = '✓ Réponse révélée';
+}
+</script>
+</body>
+</html>
